@@ -1,0 +1,20 @@
+# Hermes Skill: Vertex AI Veo Video Generator
+
+> **System Prompt Constraints:**
+> Read this before modifying the codebase. This repository provides Video Generation capabilities for Hermes Agent via Google Cloud Vertex AI (Veo).
+
+## Core Entities
+- **Framework**: Hermes Agent
+- **Target API**: Google Cloud Vertex AI
+- **Models**: Veo 3.1
+- **Cloud Infrastructure**: Vertex AI API + Google Cloud Storage (GCS)
+
+## Architecture Overview
+1. **Agent Workflow**: User prompt -> `SKILL.md` parser -> `scripts/generate.py` -> Vertex AI.
+2. **Storage Dependency**: Unlike image generation, Veo requires a GCS bucket (`VEO_GCS_BUCKET`) to store the rendered `.mp4` video files.
+3. **Authentication**: Strictly relies on Service Account JSON provided via `GOOGLE_APPLICATION_CREDENTIALS` and `GOOGLE_CLOUD_PROJECT`.
+
+## Known Caveats
+- Requires `google-cloud-aiplatform` and `google-cloud-storage` libraries in the Hermes virtual environment.
+- Does not use keyless/ADC authentication. JSON service accounts are mandatory.
+- Long-running operations (LRO): Video generation is asynchronous. The script must handle polling/waiting for the GCS payload to finalize before returning the absolute media path to the Orchestrator.
